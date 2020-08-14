@@ -1,8 +1,6 @@
 $(function () {
     let ddList = $('.dd-list'),
-        ddListList = $('.dd-list__list'),
         langTitle = $('.settings__language--title'),
-        heightMenu = $('.menu').height(),
         screenCheck950 = false, screenCheck2 = false;
     function screenSize() {
         if ($(window).width() >= 950) {
@@ -29,7 +27,6 @@ $(function () {
     screenSize();
     $(window).resize(function () {
         screenSize();
-        
     });
 
     $('.wrapper').on('click', function () {
@@ -168,8 +165,6 @@ $(function () {
         formElem: $('.form-input'),
         //focusClass: 'focus'
     });
-
-    //$('form-login__input[data]')
 
     function hHeader(settings) {
         
