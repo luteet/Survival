@@ -14,6 +14,7 @@ $(function () {
                 $('.burger, .menu, .wrapper').removeClass('active');
                 $('.menu').removeClass('anim-speed');
                 $('.wrapper').css('transform', 'translate(0)');
+                $('body').removeClass('lock');
             }
         }
         else if ($(window).width() <= 950) {
