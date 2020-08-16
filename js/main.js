@@ -93,6 +93,26 @@ $(function () {
     function screenSize() {
         if ($(window).width() > 1170 && screenCheckStart == false) {
             screenCheckStart = true;
+            screenCheck1170 = false;
+            imageReplaceWhenResize('start');
+        }
+        else if ($(window).width() < 1170 && screenCheck1170 == false) {
+            screenCheck1170 = true;
+            screenCheckStart = false;
+            imageReplaceWhenResize(1170);
+        }
+        /* else if ($(window).width() < 768 && screenCheck768 == false) {
+            screenCheck500 = false; screenCheck1170 = false;
+            screenCheck768 = true;
+            imageReplaceWhenResize(768);
+        } */
+        /* else if ($(window).width() <= 500 && screenCheck500 == false) {
+            screenCheck500 = true;
+            screenCheck768 = false; screenCheck1170 = false;
+            imageReplaceWhenResize(500);
+        } */
+        /* if ($(window).width() > 1170 && screenCheckStart == false) {
+            screenCheckStart = true;
             screenCheck1170 = false; screenCheck768 = false;
             imageReplaceWhenResize('start');
         }
@@ -110,7 +130,7 @@ $(function () {
             screenCheck500 = true;
             screenCheck768 = false; screenCheck1170 = false;
             imageReplaceWhenResize(500);
-        }
+        } */
         if ($(window).width() >= 950) {
             if (screenCheck950 == false) {
                 screenCheck950 = true;
