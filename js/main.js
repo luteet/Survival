@@ -1,8 +1,116 @@
 $(function () {
+
+    let userAgent = navigator.userAgent.toLowerCase(),
+        Mozila = /firefox/.test(userAgent),
+        Chrome = /chrome/.test(userAgent),
+        Safari = /safari/.test(userAgent),
+        Opera = /opera/.test(userAgent),
+        InternetExplorer = false;
+
+    if ((/mozilla/.test(userAgent) && !/firefox/.test(userAgent) && !/chrome/.test(userAgent) && !/safari/.test(userAgent) && !/opera/.test(userAgent)) || /msie/.test(userAgent))
+        InternetExplorer = true;
+
+    /* console.log(userAgent); */
+
+    $('.header__slider--body').slick({
+        slidesToShow: 1,
+        infinite: false,
+        prevArrow: '<button type="button" class="slick-prev header__slider--btn slider__btn slider__btn--prev"><svg xmlns="http://www.w3.org/2000/svg" width="168.137" height="241.235" viewBox="0 0 168.137 241.235"><g transform="translate(159.652 6) rotate(90)"><line x2="75.583" y2="75.583" transform="translate(151.167)" stroke-linecap="round" stroke-width="12"/><line y1="75.583" x2="75.583" transform="translate(151.167 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><line x2="226.75" transform="translate(0 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><g transform="translate(108.651 28.344)"><line x2="47.24" y2="47.24" transform="translate(4.724)" stroke-linecap="round" stroke-width="12"/><line y1="47.24" x2="51.964" transform="translate(0 47.24)" fill="none" stroke-linecap="round" stroke-width="12"/></g></g></svg></button>',
+        nextArrow: '<button type="button" class="slick-next header__slider--btn slider__btn slider__btn--next"><svg xmlns="http://www.w3.org/2000/svg" width="168.137" height="241.235" viewBox="0 0 168.137 241.235"><g transform="translate(159.652 6) rotate(90)"><line x2="75.583" y2="75.583" transform="translate(151.167)" fill="none" stroke-linecap="round" stroke-width="12"/><line y1="75.583" x2="75.583" transform="translate(151.167 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><line x2="226.75" transform="translate(0 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><g transform="translate(108.651 28.344)"><line x2="47.24" y2="47.24" transform="translate(4.724)" stroke-linecap="round" stroke-width="12"/><line y1="47.24" x2="51.964" transform="translate(0 47.24)" fill="none" stroke-linecap="round" stroke-width="12"/></g></g></svg></button>',
+        adaptiveHeight: true,
+        appendArrows: '.header__slider--buttons',
+        dots: true,
+        dotsClass: 'header__slider--dots-list',
+        appendDots: '.header__slider--dots',
+        /*responsive: [
+            {
+              breakpoint: 1850,
+              settings: {
+                
+              }
+            }
+          ]*/
+
+    });
+
+    let headerDotsLength = 0;
+    $.each($('.header__slider--dots li'), function() {
+        headerDotsLength++;
+        if(headerDotsLength < 10) {
+            $('.header__slider--dots-length').html('0' + headerDotsLength);
+        }
+        
+    })
+
+    let image_srcNotWebp,
+        image_src_bg = '.webp-bg';
+
+    function ThisIsWebP() {
+        let def = $.Deferred(), crimg = new Image();
+        crimg.onload = function () { def.resolve(); };
+        crimg.onerror = function () { def.reject(); };
+        crimg.src = "https://simpl.info/webp/cherry.webp";
+        return def.promise();
+    }
+
+    ThisIsWebP().then(function () {
+        $.each($(image_src_bg), function () {
+            return false;
+        });
+    }, function () {
+        $('html').addClass('not-support');
+    });
+
+
+
+
+    function imageReplaceWhenResize(value) {
+        let valueNotWebp = 'notwebp-' + value,
+            valueWebp = 'webp-' + value, image_src;
+        $.each($(image_src_bg), function () {
+            if (InternetExplorer == true) {
+                image_src = $(this).data(valueNotWebp);
+            }
+            else {
+                image_src = $(this).data(valueWebp);
+            }
+            if ($(this).is('a') == true) {
+                $(this).attr('href', image_src);
+            }
+            else {
+                $(this).css('background-image', 'url("' + image_src + '")');
+            }
+        });
+    }
+
+
+
     let ddList = $('.dd-list'),
         langTitle = $('.settings__language--title'),
-        screenCheck950 = false, screenCheck2 = false;
+        screenCheck950 = false, screenCheck2 = false,
+        screenCheckStart = false, screenCheck1170 = false,
+        screenCheck768 = false, screenCheck500 = false;
     function screenSize() {
+        if ($(window).width() > 1170 && screenCheckStart == false) {
+            screenCheckStart = true;
+            screenCheck1170 = false; screenCheck768 = false;
+            imageReplaceWhenResize('start');
+        }
+        else if ($(window).width() <= 1170 && $(window).width() > 768 && screenCheck1170 == false) {
+            screenCheck1170 = true;
+            screenCheck768 = false; screenCheck500 = false; screenCheckStart = false;
+            imageReplaceWhenResize(1170);
+        }
+        else if ($(window).width() <= 768 && $(window).width() > 500 && screenCheck768 == false) {
+            screenCheck500 = false; screenCheck1170 = false;
+            screenCheck768 = true;
+            imageReplaceWhenResize(768);
+        }
+        else if ($(window).width() <= 500 && screenCheck500 == false) {
+            screenCheck500 = true;
+            screenCheck768 = false; screenCheck1170 = false;
+            imageReplaceWhenResize(500);
+        }
         if ($(window).width() >= 950) {
             if (screenCheck950 == false) {
                 screenCheck950 = true;
@@ -48,8 +156,8 @@ $(function () {
             mWidth = $('.menu').width() - 15;
             if ($(this).hasClass('active')) {
                 $('.wrapper').css('transform', "translateX(-" + mWidth + "px" + ")")
-                setTimeout(function (){
-                    $('.wrapper').addClass('active');                    
+                setTimeout(function () {
+                    $('.wrapper').addClass('active');
                 }, 200)
             }
             else {
@@ -64,7 +172,7 @@ $(function () {
 
     $('body').on('click', function (e) {
         if (($(ddList).parent().has(e.target).length != 0) && screenCheck950 == false) {
-            
+
             $(ddList).removeClass('active');
             //$(ddList).prev().removeClass('active');
             $(e.target).addClass('active');
@@ -73,15 +181,15 @@ $(function () {
         else if ($(ddList).prev(e.target).length != 0) {
             $(ddList).removeClass('active');
             $(ddList).prev().removeClass('active');
-            
+
         }
     });
 
-    $('.settings__login').on('click', function() {
+    $('.settings__login').on('click', function () {
         $('.settings__language--title').removeClass('active');
     });
 
-    $('.dd-list__item').on('click', function() {
+    $('.dd-list__item').on('click', function () {
         $(ddList).removeClass('active');
         $(ddList).prev().removeClass('active');
     });
@@ -91,8 +199,8 @@ $(function () {
         preloader: false
     });
 
-    $('.search__btn').on('click', function(e) {        
-        if($(this).prev().val() == '') {
+    $('.search__btn').on('click', function (e) {
+        if ($(this).prev().val() == '') {
             e.preventDefault();
         }
     });
@@ -167,33 +275,33 @@ $(function () {
     });
 
     function hHeader(settings) {
-        
+
         if (settings == undefined) {
             return false;
         }
-    
+
         if (settings.elemName == undefined) {
             return false;
         }
-    
+
         if (settings.distance == undefined) {
             settings.distance = 500;
         }
-    
+
         if (settings.fade == undefined) {
             settings.fade = false;
         }
-    
+
         if (settings.speedAnim == undefined) {
             settings.speedAnim = 200;
         }
 
-    
-    
+
+
         let header = settings.elemName,
             distance = settings.distance,
             scrollPrev = 0, ifHeaderTopClass, ifHeaderTopDistance,
-            scrollDown = distance,          
+            scrollDown = distance,
             distanceHide = settings.distanceHide,
             distanceShow = settings.distanceShow,
             scrolled = $(window).scrollTop(),
@@ -202,84 +310,112 @@ $(function () {
             scrollTopCheck = false,
             scrollToTop = false,
             scrollToDown = false,
-            classAnchor = settings.classAnchor, classAnchorForTop = settings.classAnchorForTop;
-            
+            classAnchor = settings.classAnchor, classAnchorForTop = settings.classAnchorForTop,
+            disableScript, disableScriptMedia, disableScriptCheck = false;
 
-            
-        
-        if(typeof distanceHide == 'number') {
+
+
+
+        if (typeof distanceHide == 'number') {
             scrollDown = distanceHide;
-        }        
+        }
 
-        if(settings.ifHeaderTop != undefined) {
+        if (settings.ifHeaderTop != undefined) {
             ifHeaderTopClass = settings.ifHeaderTop[0];
             ifHeaderTopDistance = settings.ifHeaderTop[1];
         }
-        
+
+        if (settings.disable != undefined) {
+            disableScript = settings.disable[0];
+            disableScriptMedia = settings.disable[1];
+            disableFunc();
+        }
+
+        function disableFunc() {
+            if ($(window).width() <= disableScriptMedia) {
+                disableScriptCheck = true;
+            }
+            else if ($(window).width() > disableScriptMedia) {
+                disableScriptCheck = false;
+            }
+        }
+
+        $(window).resize(function () {
+            if (disableScript == true) {
+                if (disableScriptCheck == false && $(window).width() <= disableScriptMedia) {
+                    disableScriptCheck = true;
+                }
+                else if (disableScriptCheck == true && $(window).width() > disableScriptMedia) {
+                    disableScriptCheck = false;
+                }
+            }
+        });
 
         function ifHeaderTop() {
-            if(scrolled <= ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
+            if (scrolled <= ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
                 $(header).addClass(ifHeaderTopClass);
-                if(classAnchorForTop == true) {
+                if (classAnchorForTop == true) {
                     $(header).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                    $.each($('[data-hh-anchor]'), function() {                            
+                    $.each($('[data-hh-anchor]'), function () {
                         $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
                     })
                 }
             }
             else if (scrolled > ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
                 $(header).removeClass(ifHeaderTopClass);
-                if(classAnchorForTop == true) {
-                    $.each($('[data-hh-anchor]'), function() {                            
+                if (classAnchorForTop == true) {
+                    $.each($('[data-hh-anchor]'), function () {
                         $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
                     })
                 }
             }
         }
-        if(typeof ifHeaderTopClass == 'string') {
+        if (typeof ifHeaderTopClass == 'string') {
             ifHeaderTop();
         }
 
+
         $(window).scroll(function () {
-            scrolled = $(window).scrollTop();          
-            if (scrolled == 0) {
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeIn(settings.speedAnim);
-                    }
-                    else if (settings.fade == false) {
-                        $(header).slideDown(settings.speedAnim);
-                    }
-                    
-                }
-                else {
-                    $(header).removeClass(settings.classToHide);
-                }
-                scrollTopCheck = true;
-            }
-            
-            if(typeof ifHeaderTopClass == 'string') {
-                ifHeaderTop();
-            }
-    
-            if (scrolled > 100 && scrolled > scrollPrev) {
-                if (scrollToDown == false) {
-                    scrollToTop = false;
-                    
-                    if(typeof distanceHide == 'number') {
-                        scrollDown = scrolled + distanceHide;
+            if (disableScriptCheck == false) {
+                scrolled = $(window).scrollTop();
+                if (scrolled == 0) {
+                    if (settings.classToHide == undefined) {
+                        if (settings.fade == true) {
+                            $(header).fadeIn(settings.speedAnim);
+                        }
+                        else if (settings.fade == false) {
+                            $(header).slideDown(settings.speedAnim);
+                        }
+
                     }
                     else {
-                        scrollDown = scrolled + distance;
+                        $(header).removeClass(settings.classToHide);
                     }
-                    scrollDownCheck = false;
-                    scrollToDown = true;
+                    scrollTopCheck = true;
                 }
-                
-            } else if (scrollToTop == false) {
-                
+
+                if (typeof ifHeaderTopClass == 'string') {
+                    ifHeaderTop();
+                }
+
+                if (scrolled > 100 && scrolled > scrollPrev) {
+                    if (scrollToDown == false) {
+                        scrollToTop = false;
+
+                        if (typeof distanceHide == 'number') {
+                            scrollDown = scrolled + distanceHide;
+                        }
+                        else {
+                            scrollDown = scrolled + distance;
+                        }
+                        scrollDownCheck = false;
+                        scrollToDown = true;
+                    }
+
+                } else if (scrollToTop == false) {
+
                     scrollToDown = false;
-                    if(typeof distanceShow == 'number') {
+                    if (typeof distanceShow == 'number') {
                         scrollTop = scrolled - distanceShow;
                     }
                     else {
@@ -288,60 +424,63 @@ $(function () {
                     scrollTopCheck = false;
                     scrollToTop = true;
                 }
-                
-            scrollPrev = scrolled;
-            if (scrolled >= scrollDown && scrollDownCheck == false) {
-                // hide elem
-                
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeOut(settings.speedAnim);
+
+                scrollPrev = scrolled;
+                if (scrolled >= scrollDown && scrollDownCheck == false) {
+                    // hide elem
+
+                    if (settings.classToHide == undefined) {
+                        if (settings.fade == true) {
+                            $(header).fadeOut(settings.speedAnim);
+                        }
+                        else if (settings.fade == false) {
+                            $(header).slideUp(settings.speedAnim);
+                        }
+                        if (classAnchor == true) {
+                            $.each($('[data-hh-anchor]'), function () {
+                                $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
+                            })
+                        }
                     }
-                    else if (settings.fade == false) {
-                        $(header).slideUp(settings.speedAnim);
+                    else {
+                        $(header).addClass(settings.classToHide);
+                        if (classAnchor == true) {
+                            $.each($('[data-hh-anchor]'), function () {
+                                $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
+                            })
+                        }
                     }
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
+                    scrollDownCheck = true;
                 }
-                else {
-                    $(header).addClass(settings.classToHide);
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
+                if (scrollTop >= scrolled && scrollTopCheck == false) {
+                    // show elem
+                    if (settings.classToHide == undefined) {
+                        if (settings.fade == true) {
+                            $(header).fadeIn(settings.speedAnim);
+                        }
+                        else if (settings.fade == false) {
+                            $(header).slideDown(settings.speedAnim);
+                        }
+                        if (classAnchor == true) {
+                            $.each($('[data-hh-anchor]'), function () {
+                                $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
+                            })
+                        }
                     }
+                    else {
+                        $(header).removeClass(settings.classToHide);
+                        if (classAnchor == true) {
+                            $.each($('[data-hh-anchor]'), function () {
+                                $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
+                            })
+                        }
+                    }
+                    scrollTopCheck = true;
                 }
-                scrollDownCheck = true;
-            }
-            if (scrollTop >= scrolled && scrollTopCheck == false) {
-                // show elem
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeIn(settings.speedAnim);
-                    }
-                    else if (settings.fade == false) {
-                        $(header).slideDown(settings.speedAnim);
-                    }
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
-                else {
-                    $(header).removeClass(settings.classToHide);
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
-                scrollTopCheck = true;
+
             }
         });
+
     }
 
     hHeader({
@@ -350,7 +489,11 @@ $(function () {
         distanceHide: 300,
         distanceShow: 100,
         ifHeaderTop: ['top', 0],
-        classAnchorForTop: true
+        classAnchorForTop: true,
+        disable: [true, 950]
     });
 
+    
+
 });
+
