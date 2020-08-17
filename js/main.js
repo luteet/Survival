@@ -34,12 +34,12 @@ $(function () {
     });
 
     let headerDotsLength = 0;
-    $.each($('.header__slider--dots li'), function() {
+    $.each($('.header__slider--dots li'), function () {
         headerDotsLength++;
-        if(headerDotsLength < 10) {
+        if (headerDotsLength < 10) {
             $('.header__slider--dots-length').html('0' + headerDotsLength);
         }
-        
+
     })
 
     let image_srcNotWebp,
@@ -58,7 +58,16 @@ $(function () {
             return false;
         });
     }, function () {
-        $('html').addClass('not-support');
+        $.each($(image_src_bg), function () {
+            image_src = $(this).data('notwebp');
+            //image_src = $(this).data(valueWebp);
+            if ($(this).is('a') == true) {
+                $(this).attr('href', image_src);
+            }
+            else {
+                $(this).css('background-image', 'url("' + image_src + '")');
+            }
+        });
     });
 
 
@@ -83,54 +92,31 @@ $(function () {
         });
     }
 
-
+    function widthSpecialBlock() {
+        widthChallengesTop = $('.challenges__special--subtitle span').width() - 50;
+        console.log(widthChallengesTop + ' ' + $('.challenges__special--top').width())
+        if (widthChallengesTop > $('.challenges__special--top').width()) {
+            $('.challenges__special--top').css('width', widthChallengesTop + 'px');
+        }
+        else if (widthChallengesTop < $('.challenges__special--top').width()) {
+            widthChallengesTop = $('.challenges__special--top').width() + 15;
+            $('.challenges__special--top').css('width', widthChallengesTop + 'px');
+        }
+    }
 
     let ddList = $('.dd-list'),
         langTitle = $('.settings__language--title'),
-        screenCheck950 = false, screenCheck2 = false,
-        screenCheckStart = false, screenCheck1170 = false,
-        screenCheck768 = false, screenCheck500 = false;
+        widthChallengesTop,
+        screenCheck950 = false, screenCheck2 = false, screenCheck1336 = false;
     function screenSize() {
-        if ($(window).width() > 1170 && screenCheckStart == false) {
-            screenCheckStart = true;
-            screenCheck1170 = false;
-            imageReplaceWhenResize('start');
+        
+        if ($(window).width() > 1336 && screenCheck1336 == false) {
+            screenCheck1336 = true;
+            widthSpecialBlock()
         }
-        else if ($(window).width() < 1170 && screenCheck1170 == false) {
-            screenCheck1170 = true;
-            screenCheckStart = false;
-            imageReplaceWhenResize(1170);
+        else if($(window).width() < 1336) {
+            screenCheck1336 = false;
         }
-        /* else if ($(window).width() < 768 && screenCheck768 == false) {
-            screenCheck500 = false; screenCheck1170 = false;
-            screenCheck768 = true;
-            imageReplaceWhenResize(768);
-        } */
-        /* else if ($(window).width() <= 500 && screenCheck500 == false) {
-            screenCheck500 = true;
-            screenCheck768 = false; screenCheck1170 = false;
-            imageReplaceWhenResize(500);
-        } */
-        /* if ($(window).width() > 1170 && screenCheckStart == false) {
-            screenCheckStart = true;
-            screenCheck1170 = false; screenCheck768 = false;
-            imageReplaceWhenResize('start');
-        }
-        else if ($(window).width() <= 1170 && $(window).width() > 768 && screenCheck1170 == false) {
-            screenCheck1170 = true;
-            screenCheck768 = false; screenCheck500 = false; screenCheckStart = false;
-            imageReplaceWhenResize(1170);
-        }
-        else if ($(window).width() <= 768 && $(window).width() > 500 && screenCheck768 == false) {
-            screenCheck500 = false; screenCheck1170 = false;
-            screenCheck768 = true;
-            imageReplaceWhenResize(768);
-        }
-        else if ($(window).width() <= 500 && screenCheck500 == false) {
-            screenCheck500 = true;
-            screenCheck768 = false; screenCheck1170 = false;
-            imageReplaceWhenResize(500);
-        } */
         if ($(window).width() >= 950) {
             if (screenCheck950 == false) {
                 screenCheck950 = true;
@@ -146,6 +132,7 @@ $(function () {
         else if ($(window).width() <= 950) {
             if (screenCheck2 == false) {
                 screenCheck950 = false;
+                screenCheck1220 = false;
                 screenCheck2 = true;
                 $('.menu').addClass('anim-speed');
                 //transition: ;
@@ -513,7 +500,9 @@ $(function () {
         disable: [true, 950]
     });
 
-    
+
+
+    /* console.log($('.challenges__special--subtitle span').width()); */
 
 });
 
