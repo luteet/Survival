@@ -127,6 +127,15 @@ $(function () {
                 $('.menu').removeClass('anim-speed');
                 $('.wrapper').css('transform', 'translate(0)');
                 $('body').removeClass('lock');
+                $('.settings__search').hover(function() {
+
+                },
+                function() {
+                    if($(window).width() > 950) {
+                        console.log('hoverOff')
+                        $('.settings__search input').blur();
+                    }
+                });
             }
         }
         else if ($(window).width() <= 950) {
@@ -135,6 +144,7 @@ $(function () {
                 screenCheck1220 = false;
                 screenCheck2 = true;
                 $('.menu').addClass('anim-speed');
+                
                 //transition: ;
             }
         }
