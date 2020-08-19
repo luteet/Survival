@@ -175,13 +175,13 @@ $(function () {
                 $('.wrapper').css('transform', "translateX(-" + mWidth + "px" + ")")
                 setTimeout(function () {
                     $('.wrapper').addClass('active');
-                }, 200)
+                }, 0)
             }
             else {
                 $('.wrapper').css('transform', "translateX(0)")
                 setTimeout(function () {
                     $('.wrapper').removeClass('active');
-                }, 200)
+                }, 0)
             }
             menuActive = false;
         }
@@ -506,11 +506,10 @@ $(function () {
         distanceHide: 300,
         distanceShow: 100,
         ifHeaderTop: ['top', 0],
-        classAnchorForTop: true,
         disable: [true, 950]
     });
 
-
+    
 
     /* console.log($('.challenges__special--subtitle span').width()); */
 
