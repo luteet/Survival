@@ -20,7 +20,7 @@ $(function () {
         adaptiveHeight: true,
         appendArrows: '.header__slider--buttons',
         dots: true,
-        dotsClass: 'header__slider--dots-list',
+        dotsClass: 'header__slider--dots-list slider__dots-list',
         appendDots: '.header__slider--dots',
         /*responsive: [
             {
@@ -32,14 +32,36 @@ $(function () {
           ]*/
 
     });
+    $('.advice__slider--body').slick({
+        slidesToShow: 1,
+        infinite: false,
+        prevArrow: '<button type="button" class="slick-prev advice__slider--btn slider__btn slider__btn--prev"><svg xmlns="http://www.w3.org/2000/svg" width="168.137" height="241.235" viewBox="0 0 168.137 241.235"><g transform="translate(159.652 6) rotate(90)"><line x2="75.583" y2="75.583" transform="translate(151.167)" stroke-linecap="round" stroke-width="12"/><line y1="75.583" x2="75.583" transform="translate(151.167 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><line x2="226.75" transform="translate(0 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><g transform="translate(108.651 28.344)"><line x2="47.24" y2="47.24" transform="translate(4.724)" stroke-linecap="round" stroke-width="12"/><line y1="47.24" x2="51.964" transform="translate(0 47.24)" fill="none" stroke-linecap="round" stroke-width="12"/></g></g></svg></button>',
+        nextArrow: '<button type="button" class="slick-next advice__slider--btn slider__btn slider__btn--next"><svg xmlns="http://www.w3.org/2000/svg" width="168.137" height="241.235" viewBox="0 0 168.137 241.235"><g transform="translate(159.652 6) rotate(90)"><line x2="75.583" y2="75.583" transform="translate(151.167)" fill="none" stroke-linecap="round" stroke-width="12"/><line y1="75.583" x2="75.583" transform="translate(151.167 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><line x2="226.75" transform="translate(0 75.583)" fill="none" stroke-linecap="round" stroke-width="12"/><g transform="translate(108.651 28.344)"><line x2="47.24" y2="47.24" transform="translate(4.724)" stroke-linecap="round" stroke-width="12"/><line y1="47.24" x2="51.964" transform="translate(0 47.24)" fill="none" stroke-linecap="round" stroke-width="12"/></g></g></svg></button>',
+        adaptiveHeight: true,
+        appendArrows: '.advice__slider--buttons',
+        dots: true,
+        dotsClass: 'advice__slider--dots-list slider__dots-list',
+        appendDots: '.advice__slider--dots',
+    });
 
-    let headerDotsLength = 0;
+    let headerDotsLength = 0, adviceDotsLength = 0;
     $.each($('.header__slider--dots li'), function () {
         headerDotsLength++;
         if (headerDotsLength < 10) {
             $('.header__slider--dots-length').html('0' + headerDotsLength);
         }
-
+        else {
+            $('.header__slider--dots-length').html(headerDotsLength);
+        }
+    })
+    $.each($('.advice__slider--dots li'), function () {
+        adviceDotsLength++;
+        if (adviceDotsLength < 10) {
+            $('.advice__slider--dots-length').html('0' + adviceDotsLength);
+        }
+        else {
+            $('.advice__slider--dots-length').html(adviceDotsLength);
+        }
     })
 
     let image_srcNotWebp,
@@ -72,29 +94,8 @@ $(function () {
 
 
 
-
-    function imageReplaceWhenResize(value) {
-        let valueNotWebp = 'notwebp-' + value,
-            valueWebp = 'webp-' + value, image_src;
-        $.each($(image_src_bg), function () {
-            if (InternetExplorer == true) {
-                image_src = $(this).data(valueNotWebp);
-            }
-            else {
-                image_src = $(this).data(valueWebp);
-            }
-            if ($(this).is('a') == true) {
-                $(this).attr('href', image_src);
-            }
-            else {
-                $(this).css('background-image', 'url("' + image_src + '")');
-            }
-        });
-    }
-
     function widthSpecialBlock() {
         widthChallengesTop = $('.challenges__special--subtitle span').width() - 50;
-        console.log(widthChallengesTop + ' ' + $('.challenges__special--top').width())
         if (widthChallengesTop > $('.challenges__special--top').width()) {
             $('.challenges__special--top').css('width', widthChallengesTop + 'px');
         }
@@ -132,7 +133,6 @@ $(function () {
                 },
                 function() {
                     if($(window).width() > 950) {
-                        console.log('hoverOff')
                         $('.settings__search input').blur();
                     }
                 });
@@ -172,16 +172,10 @@ $(function () {
             $('body').toggleClass('lock');
             mWidth = $('.menu').width() - 15;
             if ($(this).hasClass('active')) {
-                $('.wrapper').css('transform', "translateX(-" + mWidth + "px" + ")")
-                setTimeout(function () {
-                    $('.wrapper').addClass('active');
-                }, 0)
+                $('.wrapper').addClass('active').css('transform', "translateX(-" + mWidth + "px" + ")")
             }
             else {
-                $('.wrapper').css('transform', "translateX(0)")
-                setTimeout(function () {
-                    $('.wrapper').removeClass('active');
-                }, 0)
+                $('.wrapper').css('transform', "translateX(0)").removeClass('active');
             }
             menuActive = false;
         }
@@ -253,7 +247,6 @@ $(function () {
         }
         function prevInput(e) {
             if (e.data('input-id') != 1 && inputChek == true) {
-
                 inputChek = false;
                 inputId = e.data('input-id');
                 inputId = inputId - 1;
@@ -506,6 +499,7 @@ $(function () {
         distanceHide: 300,
         distanceShow: 100,
         ifHeaderTop: ['top', 0],
+        classAnchorForTop: true,
         disable: [true, 950]
     });
 
