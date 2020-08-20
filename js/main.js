@@ -92,7 +92,9 @@ $(function () {
         });
     });
 
-
+    $.each($('img'), function() {
+        $(this).addClass('show');
+    })
 
     function widthSpecialBlock() {
         widthChallengesTop = $('.challenges__special--subtitle span').width() - 50;
