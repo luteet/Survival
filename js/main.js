@@ -83,16 +83,12 @@ $(function () {
         $.each($(image_src_bg), function () {
             image_src = $(this).data('notwebp');
             //image_src = $(this).data(valueWebp);
-            if ($(this).is('a') == true) {
-                $(this).attr('href', image_src);
-            }
-            else {
-                $(this).css('background-image', 'url("' + image_src + '")');
-            }
+            $(this).css('background-image', 'url("' + image_src + '")');
+            
         });
     });
 
-    $.each($('img'), function() {
+    $.each($('.img-none'), function() {
         $(this).addClass('show');
     })
 
@@ -126,8 +122,8 @@ $(function () {
                 screenCheck2 = false;
                 $(ddList).removeClass('active');
                 $(langTitle).removeClass('active');
-                $('.burger, .menu, .wrapper').removeClass('active');
-                $('.menu').removeClass('anim-speed');
+                $('.burger, .menu__nav, .wrapper').removeClass('active');
+                $('.menu__nav').removeClass('anim-speed');
                 $('.wrapper').css('transform', 'translate(0)');
                 $('body').removeClass('lock');
                 $('.settings__search').hover(function() {
@@ -145,7 +141,7 @@ $(function () {
                 screenCheck950 = false;
                 screenCheck1220 = false;
                 screenCheck2 = true;
-                $('.menu').addClass('anim-speed');
+                $('.menu__nav').addClass('anim-speed');
                 
                 //transition: ;
             }
@@ -158,21 +154,21 @@ $(function () {
 
     $('.wrapper').on('click', function () {
         if ($(this).hasClass('active')) {
-            $('.burger, .menu').removeClass('active');
+            $('.burger, .menu__nav, .menu').removeClass('active');
             $('body').removeClass('lock');
         }
         $(this).removeClass('active');
         $('.wrapper').css('transform', "translateX(0)")
     });
 
-    let menuActive = false, mWidth = $('.menu').width() - 15;
+    let menuActive = false, mWidth = $('.menu__nav').width();
     $('.burger').on('click', function () {
         if (menuActive == false) {
             menuActive = true;
             $(this).toggleClass('active');
-            $('.menu').toggleClass('active');
+            $('.menu__nav, .menu').toggleClass('active');
             $('body').toggleClass('lock');
-            mWidth = $('.menu').width() - 15;
+            mWidth = $('.menu__nav').width();
             if ($(this).hasClass('active')) {
                 $('.wrapper').addClass('active').css('transform', "translateX(-" + mWidth + "px" + ")")
             }
@@ -501,8 +497,7 @@ $(function () {
         distanceHide: 300,
         distanceShow: 100,
         ifHeaderTop: ['top', 0],
-        classAnchorForTop: true,
-        disable: [true, 950]
+        classAnchorForTop: true
     });
 
     
