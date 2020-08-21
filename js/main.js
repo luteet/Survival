@@ -42,6 +42,7 @@ $(function () {
         dots: true,
         dotsClass: 'advice__slider--dots-list slider__dots-list',
         appendDots: '.advice__slider--dots',
+        //lazyLoad: 'progressive'
     });
 
     let headerDotsLength = 0, adviceDotsLength = 0;
