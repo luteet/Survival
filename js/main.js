@@ -199,7 +199,6 @@ $(function () {
             menuActive = false;
         }
     });
-
     $('body').on('click', function (e) {
         if (($(ddList).parent().has(e.target).length != 0) && screenCheck950 == false) {
 
