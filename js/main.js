@@ -107,12 +107,11 @@ $(function () {
         $(imgSrcSetHeader).attr('srcset', $(imgSrcSetHeader).data('lazy-srcset'))
         $(imgSrcSetHeader).parent('.slider__item').css('opacity', '1');
     });
-    /*
-    $(evt.currentTarget).find('source').each (i, source) ->
-        $source = $(source)
-        $source.attr 'srcset', $source.data('lazy-srcset')
-        return
-    return */
+    let widthScrollBar;
+    function widthScrollBarFunc() {
+        widthScrollBar = $('body').css('overflow', 'hidden').width();
+        widthScrollBar = widthScrollBar - $('body').css('overflow', 'visible').width();
+    }
 
     function widthSpecialBlock() {
         widthChallengesTop = $('.challenges__special--subtitle span').width() - 50;
@@ -163,9 +162,10 @@ $(function () {
             }
         }
     }
-    screenSize();
+    screenSize(); widthScrollBarFunc();
     $(window).resize(function () {
-        screenSize();
+        screenSize(); widthScrollBarFunc();
+        console.log(widthScrollBar);
     });
 
     function closePopup() {
@@ -530,6 +530,20 @@ $(function () {
     $('[data-placeholder]').blur(function() {
         $(this).attr('placeholder', $(this).data('placeholder'));
     })
+    
+    $('.form-open').on('mfpOpen', function(e) {
+        console.log(widthScrollBar)
+        $('.menu').addClass('none-anim').css('padding-right', widthScrollBar + 'px')
+    });
+    $('.form-open').on('mfpClose', function(e) {
+        console.log(widthScrollBar)
+        
+        $('.menu').css('padding-right', 0 + 'px');
+        setTimeout(function() {
+            $('.menu').removeClass('none-anim');
+        }, 200)
+    });
+
 
     AOS.init();
     /* console.log($('.challenges__special--subtitle span').width()); */
