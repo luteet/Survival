@@ -1,16 +1,5 @@
 $(function () {
 
-    let userAgent = navigator.userAgent.toLowerCase(),
-        Mozila = /firefox/.test(userAgent),
-        Chrome = /chrome/.test(userAgent),
-        Safari = /safari/.test(userAgent),
-        Opera = /opera/.test(userAgent),
-        InternetExplorer = false;
-
-    if ((/mozilla/.test(userAgent) && !/firefox/.test(userAgent) && !/chrome/.test(userAgent) && !/safari/.test(userAgent) && !/opera/.test(userAgent)) || /msie/.test(userAgent))
-        InternetExplorer = true;
-
-    /* console.log(userAgent); */
 
     $('.header__slider--body').slick({
         slidesToShow: 1,
@@ -21,16 +10,7 @@ $(function () {
         appendArrows: '.header__slider--buttons',
         dots: true,
         dotsClass: 'header__slider--dots-list slider__dots-list',
-        appendDots: '.header__slider--dots',
-        /*responsive: [
-            {
-              breakpoint: 1850,
-              settings: {
-                
-              }
-            }
-          ]*/
-
+        appendDots: '.header__slider--dots'
     });
     $('.advice__slider--body').slick({
         slidesToShow: 1,
@@ -66,8 +46,7 @@ $(function () {
         }
     })
 
-    let image_srcNotWebp,
-        image_src_bg = '.webp-bg';
+    let image_src_bg = '.webp-bg';
 
     function ThisIsWebP() {
         let def = $.Deferred(), crimg = new Image();
@@ -84,30 +63,22 @@ $(function () {
     }, function () {
         $.each($(image_src_bg), function () {
             image_src = $(this).data('notwebp');
-            //image_src = $(this).data(valueWebp);
             $(this).css('background-image', 'url("' + image_src + '")');
-            
+
         });
     });
 
-
-    /* let img_source;
-    $.each($('.img-lazy'), function() {
-        img_source = $(this).parent().find('source');
-        $(img_source).attr('srcset', $(this).set)
-    });*/
-    let imgSrcSetAdvice, imgSrcSetHeader;
-    $('.advice__slider--body').on('lazyLoaded', function(e) {
+    let imgSrcSetAdvice, imgSrcSetHeader, widthScrollBar;
+    $('.advice__slider--body').on('lazyLoaded', function (e) {
         imgSrcSetAdvice = $(e.target).find('.slick-current').find('source');
         $(imgSrcSetAdvice).attr('srcset', $(imgSrcSetAdvice).data('lazy-srcset'))
         $(imgSrcSetAdvice).parent('.slider__item').css('opacity', '1');
     });
-    $('.header__slider--body').on('lazyLoaded', function(e) {
+    $('.header__slider--body').on('lazyLoaded', function (e) {
         imgSrcSetHeader = $(e.target).find('.slick-current').find('source');
         $(imgSrcSetHeader).attr('srcset', $(imgSrcSetHeader).data('lazy-srcset'))
         $(imgSrcSetHeader).parent('.slider__item').css('opacity', '1');
     });
-    let widthScrollBar;
     function widthScrollBarFunc() {
         widthScrollBar = $('body').css('overflow', 'hidden').width();
         widthScrollBar = widthScrollBar - $('body').css('overflow', 'visible').width();
@@ -128,12 +99,12 @@ $(function () {
         widthChallengesTop,
         screenCheck950 = false, screenCheck2 = false, screenCheck1336 = false;
     function screenSize() {
-        
+
         if ($(window).width() > 1336 && screenCheck1336 == false) {
             screenCheck1336 = true;
             widthSpecialBlock()
         }
-        else if($(window).width() < 1336) {
+        else if ($(window).width() < 1336) {
             screenCheck1336 = false;
         }
         if ($(window).width() >= 950) {
@@ -144,14 +115,14 @@ $(function () {
                 $('.burger, .menu__nav, .wrapper').removeClass('active');
                 $('.wrapper').css('transform', 'translate(0)');
                 $('body').removeClass('lock');
-                $('.settings__search').hover(function() {
+                $('.settings__search').hover(function () {
 
                 },
-                function() {
-                    if($(window).width() > 950) {
-                        $('.settings__search input').blur();
-                    }
-                });
+                    function () {
+                        if ($(window).width() > 950) {
+                            $('.settings__search input').blur();
+                        }
+                    });
             }
         }
         else if ($(window).width() <= 950) {
@@ -165,15 +136,6 @@ $(function () {
     screenSize(); widthScrollBarFunc();
     $(window).resize(function () {
         screenSize(); widthScrollBarFunc();
-        console.log(widthScrollBar);
-    });
-
-    function closePopup() {
-        $.magnificPopup.close();
-    }
-
-    $('.mfp-close').on('click', function() {
-        console.log('click')
     });
 
     $('.wrapper').on('click', function () {
@@ -204,9 +166,7 @@ $(function () {
     });
     $('body').on('click', function (e) {
         if (($(ddList).parent().has(e.target).length != 0) && screenCheck950 == false) {
-
             $(ddList).removeClass('active');
-            //$(ddList).prev().removeClass('active');
             $(e.target).addClass('active');
             $(e.target).next('.dd-list').addClass('active');
         }
@@ -226,6 +186,35 @@ $(function () {
         $(ddList).prev().removeClass('active');
     });
 
+    let scrollName, scrollElem, scrollTop, start_scroll = false;
+    $('.btn-scroll').on('click', function (e) {
+        e.preventDefault();
+        if (start_scroll == false) {
+            start_scroll = true;
+
+            scrollName = $(this).attr('href'),
+                scrollElem = $(scrollName),
+                scrollTop = scrollElem.offset().top;
+
+            if ($('.menu').offset().top > scrollTop + 300) {
+                scrollTop = scrollTop - 50;
+            }
+
+            $('.burger, .menu__nav, .wrapper').removeClass('active');
+            $('body').removeClass('lock');
+
+            $('.wrapper').css('transform', 'translate(0)');
+
+            $('html, body').animate({
+                scrollTop: scrollTop
+            }, 1500);
+
+            setTimeout(function () {
+                start_scroll = false;
+            }, 1500);
+        }
+    });
+
     $('.form-open').magnificPopup({
         type: 'inline',
         preloader: false
@@ -238,21 +227,11 @@ $(function () {
     });
 
     function formKeySwitch(settings) {
-        if (settings.formElem == undefined) {
-            return false;
-        }
-
         let form_input = settings.formElem,
             inputChek = true,
-            focusClass = settings.focusClass,
             inputLength = form_input.length - 1,
             inputLast = $(form_input[inputLength]).data('input-id'),
             inputId;
-
-
-        if (settings.focusClass == undefined) {
-            focusClass = 'focus';
-        }
 
         function nextInput(e) {
             if (e.data('input-id') != inputLast && inputChek == true) {
@@ -279,59 +258,29 @@ $(function () {
         }
 
         $(form_input).focus(function () {
-
-            //$(this).parent().addClass(focusClass);
-            //$(this).prev().addClass(focusClass);
             $(this).on('keydown', function (e) {
                 if (e.which == 40) {
                     nextInput($(this));
-                    //console.log(0);
                 }
                 if (e.which == 38) {
                     prevInput($(this));
                 }
             });
         })
-            .blur(function () {
-                /* if ($(this).val() == '') {
-                    $(this).prev().removeClass(focusClass);
-                } */
-                //$(this).parent().removeClass(focusClass);
-            });
     }
 
     formKeySwitch({
         formElem: $('.form-input'),
-        //focusClass: 'focus'
     });
 
     function hHeader(settings) {
 
-        if (settings == undefined) {
-            return false;
-        }
-
-        if (settings.elemName == undefined) {
-            return false;
-        }
-
-        if (settings.distance == undefined) {
-            settings.distance = 500;
-        }
-
-        if (settings.fade == undefined) {
-            settings.fade = false;
-        }
-
-        if (settings.speedAnim == undefined) {
-            settings.speedAnim = 200;
-        }
-
-
+        settings.fade = false;
+        settings.speedAnim = 200;
 
         let header = settings.elemName,
             distance = settings.distance,
-            scrollPrev = 0, ifHeaderTopClass, ifHeaderTopDistance,
+            scrollPrev = 0, ifHeaderTopClass = settings.ifHeaderTop[0], ifHeaderTopDistance = settings.ifHeaderTop[1],
             scrollDown = distance,
             distanceHide = settings.distanceHide,
             distanceShow = settings.distanceShow,
@@ -341,70 +290,26 @@ $(function () {
             scrollTopCheck = false,
             scrollToTop = false,
             scrollToDown = false,
-            classAnchor = settings.classAnchor, classAnchorForTop = settings.classAnchorForTop,
-            disableScript, disableScriptMedia, disableScriptCheck = false;
+            classAnchor = settings.classAnchor, disableScriptCheck = false;
 
-
-
-
-        if (typeof distanceHide == 'number') {
             scrollDown = distanceHide;
-        }
-
-        if (settings.ifHeaderTop != undefined) {
-            ifHeaderTopClass = settings.ifHeaderTop[0];
-            ifHeaderTopDistance = settings.ifHeaderTop[1];
-        }
-
-        if (settings.disable != undefined) {
-            disableScript = settings.disable[0];
-            disableScriptMedia = settings.disable[1];
-            disableFunc();
-        }
-
-        function disableFunc() {
-            if ($(window).width() <= disableScriptMedia) {
-                disableScriptCheck = true;
-            }
-            else if ($(window).width() > disableScriptMedia) {
-                disableScriptCheck = false;
-            }
-        }
-
-        $(window).resize(function () {
-            if (disableScript == true) {
-                if (disableScriptCheck == false && $(window).width() <= disableScriptMedia) {
-                    disableScriptCheck = true;
-                }
-                else if (disableScriptCheck == true && $(window).width() > disableScriptMedia) {
-                    disableScriptCheck = false;
-                }
-            }
-        });
 
         function ifHeaderTop() {
             if (scrolled <= ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
                 $(header).addClass(ifHeaderTopClass);
-                if (classAnchorForTop == true) {
-                    $(header).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                    $.each($('[data-hh-anchor]'), function () {
-                        $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                    })
-                }
+
+                $.each($('[data-hh-anchor]'), function () {
+                    $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
+                })
             }
             else if (scrolled > ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
                 $(header).removeClass(ifHeaderTopClass);
-                if (classAnchorForTop == true) {
-                    $.each($('[data-hh-anchor]'), function () {
-                        $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                    })
-                }
+                $.each($('[data-hh-anchor]'), function () {
+                    $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
+                })
             }
         }
-        if (typeof ifHeaderTopClass == 'string') {
-            ifHeaderTop();
-        }
-
+        ifHeaderTop();
 
         $(window).scroll(function () {
             if (disableScriptCheck == false) {
@@ -432,13 +337,7 @@ $(function () {
                 if (scrolled > 100 && scrolled > scrollPrev) {
                     if (scrollToDown == false) {
                         scrollToTop = false;
-
-                        if (typeof distanceHide == 'number') {
-                            scrollDown = scrolled + distanceHide;
-                        }
-                        else {
-                            scrollDown = scrolled + distance;
-                        }
+                        scrollDown = scrolled + distanceHide;
                         scrollDownCheck = false;
                         scrollToDown = true;
                     }
@@ -446,73 +345,33 @@ $(function () {
                 } else if (scrollToTop == false) {
 
                     scrollToDown = false;
-                    if (typeof distanceShow == 'number') {
-                        scrollTop = scrolled - distanceShow;
-                    }
-                    else {
-                        scrollTop = scrolled - distance;
-                    }
+                    scrollTop = scrolled - distanceShow;
                     scrollTopCheck = false;
                     scrollToTop = true;
                 }
 
                 scrollPrev = scrolled;
                 if (scrolled >= scrollDown && scrollDownCheck == false) {
-                    // hide elem
-
-                    if (settings.classToHide == undefined) {
-                        if (settings.fade == true) {
-                            $(header).fadeOut(settings.speedAnim);
-                        }
-                        else if (settings.fade == false) {
-                            $(header).slideUp(settings.speedAnim);
-                        }
-                        if (classAnchor == true) {
-                            $.each($('[data-hh-anchor]'), function () {
-                                $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                            })
-                        }
-                    }
-                    else {
-                        $(header).addClass(settings.classToHide);
-                        if (classAnchor == true) {
-                            $.each($('[data-hh-anchor]'), function () {
-                                $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                            })
-                        }
+                    $(header).addClass(settings.classToHide);
+                    if (classAnchor == true) {
+                        $.each($('[data-hh-anchor]'), function () {
+                            $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
+                        })
                     }
                     scrollDownCheck = true;
                 }
                 if (scrollTop >= scrolled && scrollTopCheck == false) {
-                    // show elem
-                    if (settings.classToHide == undefined) {
-                        if (settings.fade == true) {
-                            $(header).fadeIn(settings.speedAnim);
-                        }
-                        else if (settings.fade == false) {
-                            $(header).slideDown(settings.speedAnim);
-                        }
-                        if (classAnchor == true) {
-                            $.each($('[data-hh-anchor]'), function () {
-                                $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                            })
-                        }
-                    }
-                    else {
-                        $(header).removeClass(settings.classToHide);
-                        if (classAnchor == true) {
-                            $.each($('[data-hh-anchor]'), function () {
-                                $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                            })
-                        }
+                    $(header).removeClass(settings.classToHide);
+                    if (classAnchor == true) {
+                        $.each($('[data-hh-anchor]'), function () {
+                            $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
+                        })
                     }
                     scrollTopCheck = true;
                 }
-
             }
         });
-
-    }
+}
 
     hHeader({
         elemName: $('.menu'),
@@ -523,30 +382,24 @@ $(function () {
         classAnchorForTop: true
     });
 
-    $('[data-placeholder]').focus(function() {
+    $('[data-placeholder]').focus(function () {
         $(this).attr('placeholder', '');
-        
-    })
-    $('[data-placeholder]').blur(function() {
+    }).blur(function () {
         $(this).attr('placeholder', $(this).data('placeholder'));
     })
-    
-    $('.form-open').on('mfpOpen', function(e) {
-        console.log(widthScrollBar)
+
+
+    $('.form-open').on('mfpOpen', function (e) {
         $('.menu').addClass('none-anim').css('padding-right', widthScrollBar + 'px')
     });
-    $('.form-open').on('mfpClose', function(e) {
-        console.log(widthScrollBar)
-        
+    $('.form-open').on('mfpClose', function (e) {
         $('.menu').css('padding-right', 0 + 'px');
-        setTimeout(function() {
+        setTimeout(function () {
             $('.menu').removeClass('none-anim');
         }, 200)
     });
 
-
     AOS.init();
-    /* console.log($('.challenges__special--subtitle span').width()); */
 
 });
 
